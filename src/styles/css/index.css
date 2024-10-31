@@ -1,0 +1,46 @@
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  background-color: #3b1111;
+  text-align: center;
+}
+
+h1 {
+  color: #c1a01e;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #c1a01e;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #c1a01e;
+  color: #3b1111;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 10px;
+}
+
+.cell {
+  border-radius: 10px;
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  margin-left: 10px;
+  border: 1px solid #c1a01e;
+  background-color: #a58c8c;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.info-container {
+  width: 30%;
+  align-items: center;
+  padding: 50px;
+}
+
+/*# sourceMappingURL=index.css.map */

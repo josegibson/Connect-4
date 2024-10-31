@@ -1,0 +1,46 @@
+@import 'variables';
+
+body{
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.6;
+    background-color: $color-background;
+    text-align: center;
+}
+
+h1{
+    color: $color-primary;
+}
+
+h2{
+    font-size: 1.8rem;
+    color: $color-primary;
+}
+
+button{
+    padding: 10px 20px;
+    border: none;
+    background-color: $color-primary;
+    color: $color-background;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 10px;
+}
+
+.cell{
+    border-radius: 10px;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin-left: 10px;
+    border: 1px solid $color-primary;
+    background-color: $color-secondary;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.info-container{
+    width: 30%;
+    align-items: center;
+    padding: 50px;
+}
