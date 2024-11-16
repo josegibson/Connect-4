@@ -1,5 +1,9 @@
 # Connect 4 Game
 
+## Play the Game
+
+Access the game [here](https://josegibson.github.io/Connect-4/).
+
 ## Features
 
 - Classic Connect 4 game for two players
@@ -12,6 +16,3 @@
 
 - **Frontend:** React, CSS
 
-## Play the Game
-
-Access the game [here](https://josegibson.github.io/Connect-4/).
