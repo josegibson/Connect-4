@@ -8,14 +8,11 @@ function App() {
     switch (status) {
       case 'active':
         return `${player}'s turn`;
-        break;
       case 'draw':
         return 'It\'s a Draw!';
-        break;
 
       default:
         return `${status} wins!`;
-        break;
     }
   }
 

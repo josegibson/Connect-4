@@ -26,13 +26,13 @@ button {
 }
 
 .cell {
-  border-radius: 10px;
+  border-radius: 50%;
   display: inline-block;
   width: 70px;
   height: 70px;
   margin-left: 10px;
   border: 1px solid #c1a01e;
-  background-color: #343434;
+  background-color: #292323;
   cursor: pointer;
   transition: background-color 0.3s;
 }
