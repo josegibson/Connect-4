@@ -1,82 +1,144 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const UseConnect4 = () => {
-  const [board, setBoard] = useState(Array(6).fill(Array(7).fill(null)));
-  const [status, setStatus] = useState("active");
-  const [player, setPlayer] = useState("Red");
 
-  const resetBoard = () => {
-    setBoard(Array(6).fill(Array(7).fill(null)));
-    setPlayer("Red");
-    setStatus("active");
+  const createEmptyBoard = () => {
+    return Array(6).fill(Array(7).fill(0));
+  };
+
+  const [board, setBoard] = useState(createEmptyBoard());
+  const [status, setStatus] = useState(0); // 0:active, 1:red, 2:yellow, 3:draw
+  const [player, setPlayer] = useState(1); // 1:red, 2:yellow
+  const [startingPlayer, setStartingPlayer] = useState(1);
+
+  const newGame = () => {
+    const newStartingPlayer = startingPlayer === 1 ? 2 : 1;
+    setStartingPlayer(newStartingPlayer);
+    setBoard(createEmptyBoard());
+    setStatus(0);
+    setPlayer(newStartingPlayer);
+    console.log("New Game Started with player: " + newStartingPlayer);
   };
 
   const dropPiece = (column) => {
-
-    if (status !== "active") return;
+    if (status !== 0) return false;
 
     const newBoard = board.map((row) => row.slice());
-    let index = null;
     for (let i = 5; i >= 0; i--) {
-      if (newBoard[i][column] === null) {
+      if (newBoard[i][column] === 0) {
         newBoard[i][column] = player;
-        index = i;
-        break;
+        // Check for a win or draw before updating the state
+        const newStatus = updateStatus(newBoard, player);
+        setBoard(newBoard);
+        if (newStatus !== 0) {
+          setStatus(newStatus);
+        } else {
+          // Switch player
+          setPlayer(player === 1 ? 2 : 1);
+        }
+        return true;
       }
     }
-    setBoard(newBoard);
-
-    checkWinner(index, column);
-
-    setPlayer(player === "Red" ? "Yellow" : "Red");
+    return false;
   };
 
-  const checkWinner = (row, column) => {
+  const updateStatus = (currentBoard, currentPlayer) => {
+    if (
+      checkHorizontal(currentBoard, currentPlayer) ||
+      checkVertical(currentBoard, currentPlayer) ||
+      checkDiagonal(currentBoard, currentPlayer)
+    ) {
+      return currentPlayer;
+    }
 
-    const directions = [
-      { x: 0, y: 1 }, // vertical
-      { x: 1, y: 0 }, // horizontal
-      { x: 1, y: 1 }, // diagonal down-right
-      { x: 1, y: -1 }, // diagonal up-right
-    ];
+    if (currentBoard.every((row) => row.every((cell) => cell !== 0))) {
+      return 3; // Draw
+    }
 
-    for (let { x, y } of directions) {
-      let count = 1;
+    return 0; // Game continues
+  };
 
-      for (let i = 1; i < 4; i++) {
-        const newRow = row + i * y;
-        const newCol = column + i * x;
+  const checkHorizontal = (currentBoard, currentPlayer) => {
+    for (let i = 0; i < 6; i++) {
+      for (let j = 0; j < 4; j++) {
         if (
-          newRow < 0 ||
-          newRow >= 6 ||
-          newCol < 0 ||
-          newCol >= 7 ||
-          board[newRow][newCol] !== player
-        )
-          break;
-        count++;
-      }
-
-      for (let i = 1; i < 4; i++) {
-        const newRow = row - i * y;
-        const newCol = column - i * x;
-        if (
-          newRow < 0 ||
-          newRow >= 6 ||
-          newCol < 0 ||
-          newCol >= 7 ||
-          board[newRow][newCol] !== player
-        )
-          break;
-        count++;
-      }
-
-      if (count >= 4) {
-        setStatus(player)
-        return status;
+          currentBoard[i][j] === currentPlayer &&
+          currentBoard[i][j + 1] === currentPlayer &&
+          currentBoard[i][j + 2] === currentPlayer &&
+          currentBoard[i][j + 3] === currentPlayer
+        ) {
+          return true;
+        }
       }
     }
+    return false;
   };
 
-  return { board, status, player, dropPiece, resetBoard };
+  const checkVertical = (currentBoard, currentPlayer) => {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 7; j++) {
+        if (
+          currentBoard[i][j] === currentPlayer &&
+          currentBoard[i + 1][j] === currentPlayer &&
+          currentBoard[i + 2][j] === currentPlayer &&
+          currentBoard[i + 3][j] === currentPlayer
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const checkDiagonal = (currentBoard, currentPlayer) => {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (
+          currentBoard[i][j] === currentPlayer &&
+          currentBoard[i + 1][j + 1] === currentPlayer &&
+          currentBoard[i + 2][j + 2] === currentPlayer &&
+          currentBoard[i + 3][j + 3] === currentPlayer
+        ) {
+          return true;
+        }
+      }
+    }
+
+    for (let i = 3; i < 6; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (
+          currentBoard[i][j] === currentPlayer &&
+          currentBoard[i - 1][j + 1] === currentPlayer &&
+          currentBoard[i - 2][j + 2] === currentPlayer &&
+          currentBoard[i - 3][j + 3] === currentPlayer
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  const colour = ["red", "yellow"];
+
+  const Board = () => (
+    <div>
+      {board.map((row, rowIndex) => (
+        <div key={rowIndex} className="row">
+          {row.map((cell, cellIndex) => (
+            <div
+              key={cellIndex}
+              className="cell"
+              style={{
+                backgroundColor: colour[cell - 1],
+              }}
+              onClick={() => dropPiece(cellIndex)}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
+  return { board, status, player, dropPiece, newGame, updateStatus, Board };
 };

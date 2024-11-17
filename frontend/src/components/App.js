@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { UseConnect4 } from "./UseConnect4";
+import useAgent from "./useAgent";
 
 function App() {
-  const { board, status, player, dropPiece, resetBoard } = UseConnect4();
+  const { board, status, player, dropPiece, newGame, updateStatus, Board } = UseConnect4();
+  const { calculateBestMove } = useAgent();
 
   const getMessages = () => {
-    switch (status) {
-      case 'active':
-        return `${player}'s turn`;
-      case 'draw':
-        return 'It\'s a Draw!';
+    return status + " " + player;
+  };
 
-      default:
-        return `${status} wins!`;
+  const makeAgentMove = () => {
+    const bestMove = calculateBestMove(board, player);
+    setTimeout(() => {
+        dropPiece(bestMove);
+    }, 500);
+  };
+
+  useEffect(() => {
+    if (status === 0 && player === 2) {
+      makeAgentMove();
     }
-  }
+  }, [status, player]);
 
   return (
     <div className="App container">
@@ -25,22 +32,9 @@ function App() {
       >
         <div className="info-container">
           <h2>{getMessages()}</h2>
-          <button onClick={() => resetBoard()}>New Game</button>
+          <button onClick={() => newGame()}>New Game</button>
         </div>
-        <div>
-          {board.map((row, i) => (
-            <div key={i} className="row">
-              {row.map((cell, j) => (
-                <div
-                  key={j}
-                  className="cell"
-                  onClick={() => dropPiece(j)}
-                  style={{ backgroundColor: cell }}
-                ></div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <Board />
       </div>
     </div>
   );
