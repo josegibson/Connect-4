@@ -1,25 +1,18 @@
 import React, { useEffect } from "react";
 import { UseConnect4 } from "./UseConnect4";
-import useAgent from "./useAgent";
+import { useAgent } from "./useAgent";
 
 function App() {
   const { board, status, player, dropPiece, newGame, updateStatus, Board } = UseConnect4();
-  const { calculateBestMove } = useAgent();
+  const { makeAgentMove } = useAgent();
 
   const getMessages = () => {
     return status + " " + player;
   };
 
-  const makeAgentMove = () => {
-    const bestMove = calculateBestMove(board, player);
-    setTimeout(() => {
-        dropPiece(bestMove);
-    }, 500);
-  };
-
   useEffect(() => {
     if (status === 0 && player === 2) {
-      makeAgentMove();
+      makeAgentMove(board, player, dropPiece);
     }
   }, [status, player]);
 
