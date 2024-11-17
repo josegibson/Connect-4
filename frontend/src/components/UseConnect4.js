@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const UseConnect4 = () => {
-
   const createEmptyBoard = () => {
     return Array(6).fill(Array(7).fill(0));
   };
@@ -10,6 +9,7 @@ export const UseConnect4 = () => {
   const [status, setStatus] = useState(0); // 0:active, 1:red, 2:yellow, 3:draw
   const [player, setPlayer] = useState(1); // 1:red, 2:yellow
   const [startingPlayer, setStartingPlayer] = useState(1);
+  const [winningCells, setWinningCells] = useState([]);
 
   const newGame = () => {
     const newStartingPlayer = startingPlayer === 1 ? 2 : 1;
@@ -17,6 +17,7 @@ export const UseConnect4 = () => {
     setBoard(createEmptyBoard());
     setStatus(0);
     setPlayer(newStartingPlayer);
+    setWinningCells([]);
     console.log("New Game Started with player: " + newStartingPlayer);
   };
 
@@ -28,10 +29,11 @@ export const UseConnect4 = () => {
       if (newBoard[i][column] === 0) {
         newBoard[i][column] = player;
         // Check for a win or draw before updating the state
-        const newStatus = updateStatus(newBoard, player);
+        const { newStatus, winningCells } = updateStatus(newBoard, player);
         setBoard(newBoard);
         if (newStatus !== 0) {
           setStatus(newStatus);
+          setWinningCells(winningCells);
         } else {
           // Switch player
           setPlayer(player === 1 ? 2 : 1);
@@ -43,19 +45,20 @@ export const UseConnect4 = () => {
   };
 
   const updateStatus = (currentBoard, currentPlayer) => {
+    let winningCells = [];
     if (
-      checkHorizontal(currentBoard, currentPlayer) ||
-      checkVertical(currentBoard, currentPlayer) ||
-      checkDiagonal(currentBoard, currentPlayer)
+      (winningCells = checkHorizontal(currentBoard, currentPlayer)) ||
+      (winningCells = checkVertical(currentBoard, currentPlayer)) ||
+      (winningCells = checkDiagonal(currentBoard, currentPlayer))
     ) {
-      return currentPlayer;
+      return { newStatus: currentPlayer, winningCells };
     }
 
     if (currentBoard.every((row) => row.every((cell) => cell !== 0))) {
-      return 3; // Draw
+      return { newStatus: 3, winningCells: [] }; // Draw
     }
 
-    return 0; // Game continues
+    return { newStatus: 0, winningCells: [] }; // Game continues
   };
 
   const checkHorizontal = (currentBoard, currentPlayer) => {
@@ -67,7 +70,12 @@ export const UseConnect4 = () => {
           currentBoard[i][j + 2] === currentPlayer &&
           currentBoard[i][j + 3] === currentPlayer
         ) {
-          return true;
+          return [
+            [i, j],
+            [i, j + 1],
+            [i, j + 2],
+            [i, j + 3],
+          ];
         }
       }
     }
@@ -83,7 +91,12 @@ export const UseConnect4 = () => {
           currentBoard[i + 2][j] === currentPlayer &&
           currentBoard[i + 3][j] === currentPlayer
         ) {
-          return true;
+          return [
+            [i, j],
+            [i + 1, j],
+            [i + 2, j],
+            [i + 3, j],
+          ];
         }
       }
     }
@@ -99,7 +112,12 @@ export const UseConnect4 = () => {
           currentBoard[i + 2][j + 2] === currentPlayer &&
           currentBoard[i + 3][j + 3] === currentPlayer
         ) {
-          return true;
+          return [
+            [i, j],
+            [i + 1, j + 1],
+            [i + 2, j + 2],
+            [i + 3, j + 3],
+          ];
         }
       }
     }
@@ -112,29 +130,51 @@ export const UseConnect4 = () => {
           currentBoard[i - 2][j + 2] === currentPlayer &&
           currentBoard[i - 3][j + 3] === currentPlayer
         ) {
-          return true;
+          return [
+            [i, j],
+            [i - 1, j + 1],
+            [i - 2, j + 2],
+            [i - 3, j + 3],
+          ];
         }
       }
     }
     return false;
   };
 
-  const colour = ["red", "yellow"];
+  const getMessages = () => {
+    switch (status) {
+      case 0:
+        return `Turn: Player ${player}`;
+      case 1:
+        return "Player 1 wins!";
+      case 2:
+        return "Player 2 wins!";
+      case 3:
+        return "It's a tie!";
+      default:
+        break;
+    }
+  };
 
   const Board = () => (
     <div>
       {board.map((row, rowIndex) => (
         <div key={rowIndex} className="row">
-          {row.map((cell, cellIndex) => (
-            <div
-              key={cellIndex}
-              className="cell"
-              style={{
-                backgroundColor: colour[cell - 1],
-              }}
-              onClick={() => dropPiece(cellIndex)}
-            />
-          ))}
+          {row.map((cell, cellIndex) => {
+            const isWinningCell = winningCells.some(
+              ([winRow, winCol]) => winRow === rowIndex && winCol === cellIndex
+            );
+            return (
+              <div
+                key={cellIndex}
+                className={`cell player-${cell} ${
+                  isWinningCell ? "winning" : ""
+                }`}
+                onClick={() => dropPiece(cellIndex)}
+              />
+            );
+          })}
         </div>
       ))}
     </div>
