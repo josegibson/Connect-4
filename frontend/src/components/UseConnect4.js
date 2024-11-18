@@ -10,6 +10,7 @@ export const UseConnect4 = () => {
   const [player, setPlayer] = useState(1); // 1:red, 2:yellow
   const [startingPlayer, setStartingPlayer] = useState(1);
   const [winningCells, setWinningCells] = useState([]);
+  const [userTurn, setUserTurn] = useState(false);
 
   const newGame = () => {
     const newStartingPlayer = startingPlayer === 1 ? 2 : 1;
@@ -142,20 +143,11 @@ export const UseConnect4 = () => {
     return false;
   };
 
-  const getMessages = () => {
-    switch (status) {
-      case 0:
-        return `Turn: Player ${player}`;
-      case 1:
-        return "Player 1 wins!";
-      case 2:
-        return "Player 2 wins!";
-      case 3:
-        return "It's a tie!";
-      default:
-        break;
-    }
-  };
+  const handleUserMove = (column) => {
+    if (userTurn === false) return;
+    dropPiece(column);
+    setUserTurn(false);
+  }
 
   const Board = () => (
     <div>
@@ -171,7 +163,7 @@ export const UseConnect4 = () => {
                 className={`cell player-${cell} ${
                   isWinningCell ? "winning" : ""
                 }`}
-                onClick={() => dropPiece(cellIndex)}
+                onClick={() => handleUserMove(cellIndex)}
               />
             );
           })}
@@ -180,5 +172,5 @@ export const UseConnect4 = () => {
     </div>
   );
 
-  return { board, status, player, dropPiece, newGame, updateStatus, Board };
+  return { board, status, player, dropPiece, setUserTurn, newGame, updateStatus, Board };
 };

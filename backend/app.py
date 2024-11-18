@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 from agents import Config, Observation, Agent
 
 
-
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -15,18 +13,26 @@ CORS(app)
 
 port = int(os.getenv("PORT", 5000))
 
-agent = Agent(agent_type='lookahead')
+agent = {
+    "lookahead": Agent(agent_type="lookahead"),
+    "random": Agent(agent_type="random"),
+}
+
 
 @app.route("/")
 def home():
     return jsonify({"message": "Server is running!!!"})
 
+
 @app.route("/api/move", methods=["POST"])
 def move():
     data = request.get_json()
+    app.logger.info(data)
+    agent_name = data["agent"]
     obs = Observation(board=data["board"], mark=data["player"])
+    
 
-    move = agent.getMove(obs)
+    move = agent[agent_name].getMove(obs)
     return jsonify({"move": move})
 
 

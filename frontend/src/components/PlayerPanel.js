@@ -1,7 +1,6 @@
-
 import React from "react";
 
-function PlayerPanel({ player, turn, status}) {
+function PlayerPanel({ player, turn, status, onAgentChange, agent }) {
   return (
     <div className="player-panel">
       <div className={`display-tile player-${player} ${turn === player ? "active" : ""}`}></div>
@@ -9,8 +8,9 @@ function PlayerPanel({ player, turn, status}) {
         <label htmlFor={`difficulty-${player}`}>Played by </label>
         <select
           id={`played-by-${player}`}
+          value={agent}
           onChange={(e) => {
-            
+            onAgentChange(e, player);
           }}
         >
           <option value="random">Random</option>
