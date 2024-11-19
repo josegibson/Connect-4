@@ -122,25 +122,17 @@ option {
   background-color: rgb(68.5131578947, 58.4868421053, 58.4868421053);
   transform: scale(1.1);
 }
-.cell.winning {
-  position: relative;
-}
-.cell.winning:after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 30px;
-  height: 30px;
-  background-color: rgb(96.0263157895, 81.9736842105, 81.9736842105);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
 .cell.player-1 {
   background-color: red;
 }
+.cell.player-1.winning {
+  box-shadow: 0 0 0 2px #ffcccc;
+}
 .cell.player-2 {
   background-color: yellow;
+}
+.cell.player-2.winning {
+  box-shadow: 0 0 0 2px #ffffcc;
 }
 
 .agent-selector {

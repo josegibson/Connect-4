@@ -130,25 +130,20 @@ option {
         background-color: lighten($color-accent-dark, 10%);
         transform: scale(1.1);
     }
-    &.winning {
-        position: relative;
-        &:after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 30px;
-            height: 30px;
-            background-color: lighten($color-accent-dark, 20%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
+
+    &.player-1 {
+        $bg-color: red;
+        background-color: $bg-color;
+        &.winning {
+            box-shadow: 0 0 0 2px lighten($bg-color, 40%);
         }
     }
-    &.player-1 {
-        background-color: red;
-    }
     &.player-2 {
-        background-color: yellow;
+        $bg-color: yellow;
+        background-color: $bg-color;
+        &.winning {
+            box-shadow: 0 0 0 2px lighten($bg-color, 40%);
+        }
     }
 }
 
