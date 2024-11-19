@@ -1,6 +1,8 @@
+const API_URL = process.env.API_URL || "http://localhost:5000";
+
 export function useAgent() {
   const makeAgentMove = async (board, player, dropPiece, agent) => {
-    const response = await fetch("http://localhost:5000/api/move", {
+    const response = await fetch(`${API_URL}/api/move`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
