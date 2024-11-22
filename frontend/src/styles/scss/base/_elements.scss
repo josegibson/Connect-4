@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
 @import 'variables';
 @import '../components/layout';
 @import '../components/cell';
 
-body{
-    font-family: 'Roboto', sans-serif;
+body {
+    font-family: 'Geist Mono', monospace;
     font-size: 1.6rem;
     color: $color-text;
     line-height: 1.6;
@@ -11,7 +12,9 @@ body{
     text-align: center;
 }
 
-button{
+button {
+    margin: 5px;
+    font-family: inherit;
     padding: 12px 24px;
     border: none;
     background-color: $color-text;
@@ -22,16 +25,45 @@ button{
     &:hover {
         transform: scale(1.05);
     }
+    &.outlined {
+        background-color: transparent;
+        color: $color-text;
+        // border: 2px solid $color-text;
+        &:hover {
+            background-color: $color-text;
+            color: $color-background;
+        }
+    }
 }
 
+select {
+    padding: 10px 20px;
+    border-style: none;
+    // border: 1px solid $color-text;
+    // border-radius: 8px;
+    background-color: $color-background;
+    color: $color-text;
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    box-shadow: none;
+    border-radius: 0;
 
-
-h1{
-    font-size: 2.4rem;
-    margin-bottom: 20px;
-}
-
-h2{
-    font-size: 2rem;
-    margin-bottom: 15px;
+    &:focus {
+        outline: none;
+        border-color: $color-text;
+    }
+    // Custom arrow
+    &::after {
+        content: '▼';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
 }

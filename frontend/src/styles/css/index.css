@@ -1,3 +1,5 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap");
 .app-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -23,6 +25,7 @@
 }
 
 .player-panel {
+  margin-top: 40%;
   grid-column: span 3;
   align-items: center;
   background-color: #f0f0f0;
@@ -76,7 +79,7 @@
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Geist Mono", monospace;
   font-size: 1.6rem;
   color: #000000;
   line-height: 1.6;
@@ -85,6 +88,8 @@ body {
 }
 
 button {
+  margin: 5px;
+  font-family: inherit;
   padding: 12px 24px;
   border: none;
   background-color: #000000;
@@ -96,15 +101,41 @@ button {
 button:hover {
   transform: scale(1.05);
 }
-
-h1 {
-  font-size: 2.4rem;
-  margin-bottom: 20px;
+button.outlined {
+  background-color: transparent;
+  color: #000000;
+}
+button.outlined:hover {
+  background-color: #000000;
+  color: #f0f0f0;
 }
 
-h2 {
-  font-size: 2rem;
-  margin-bottom: 15px;
+select {
+  padding: 10px 20px;
+  border-style: none;
+  background-color: #f0f0f0;
+  color: #000000;
+  font-size: 1.5em;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  box-shadow: none;
+  border-radius: 0;
+}
+select:focus {
+  outline: none;
+  border-color: #000000;
+}
+select::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .app-container {
@@ -132,6 +163,7 @@ h2 {
 }
 
 .player-panel {
+  margin-top: 40%;
   grid-column: span 3;
   align-items: center;
   background-color: #f0f0f0;
