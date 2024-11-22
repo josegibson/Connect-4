@@ -1,156 +1,37 @@
 @import 'variables';
+@import '../components/layout';
+@import '../components/cell';
 
 body{
     font-family: 'Roboto', sans-serif;
     font-size: 1.6rem;
+    color: $color-text;
     line-height: 1.6;
-    background-color: $color-background-dark;
+    background-color: $color-background;
     text-align: center;
 }
 
+button{
+    padding: 12px 24px;
+    border: none;
+    background-color: $color-text;
+    color: $color-background;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.4s;
+    border-radius: 12px;
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+
+
 h1{
-    color: $color-accent-light;
     font-size: 2.4rem;
     margin-bottom: 20px;
 }
 
 h2{
     font-size: 2rem;
-    color: $color-accent-light;
     margin-bottom: 15px;
 }
-
-button{
-    padding: 12px 24px;
-    border: none;
-    background-color: $color-accent-light;
-    color: $color-background-dark;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    border-radius: 12px;
-    &:hover {
-        background-color: darken($color-accent-light, 10%);
-        transform: scale(1.05);
-    }
-}
-
-label{
-    color: $color-accent-light;
-    margin: 10px;
-    font-size: 20px;
-}
-
-select {
-    padding: 12px 24px;
-    border: none;
-    background-color: inherit;
-    color: $color-accent-light;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    border-radius: 12px;
-    &:hover {
-        background-color: lighten($color-background-dark, 5%);
-    }
-}
-
-option {
-    background-color: $color-background-dark;
-    color: $color-accent-light;
-    padding: 12px;
-}
-
-
-.app-container{
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-gap: 20px;
-}
-
-.board-container{
-    grid-column: span 6;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 60px;
-    background-color: $color-background-dark;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-
-    h1{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0px;
-        margin: 0px;
-    }
-    
-}
-
-.player-panel{
-    grid-column: span 3;
-    align-items: center;
-    background-color: lighten($color-background-dark, 5%);
-    border-radius: 15px;
-    padding: 20px;
-
-    .display-tile{
-        height: 100px;
-        width: 100px;
-        background-color: red;
-        font-size: 20px;
-        margin: 10px auto;
-        border-radius: 50%;
-
-        &.active{
-            border: 5px solid $color-accent-light;
-        }
-
-        &.player-1{
-            background-color: red;
-        }
-
-        &.player-2{
-            background-color: yellow;
-        }
-    }
-}
-
-.cell{
-    border-radius: 50%;
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    margin: 3px;
-    border: 2px solid $color-accent-light;
-    background-color: $color-accent-dark;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    &:hover {
-        background-color: lighten($color-accent-dark, 10%);
-        transform: scale(1.1);
-    }
-
-    &.player-1 {
-        $bg-color: red;
-        background-color: $bg-color;
-        &.winning {
-            box-shadow: 0 0 0 2px lighten($bg-color, 40%);
-        }
-    }
-    &.player-2 {
-        $bg-color: yellow;
-        background-color: $bg-color;
-        &.winning {
-            box-shadow: 0 0 0 2px lighten($bg-color, 40%);
-        }
-    }
-}
-
-.agent-selector{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px;
-}
-

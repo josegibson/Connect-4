@@ -1,1 +1,4 @@
-@import 'base/elements', 'base/variables'
+@import 'base/_variables';
+@import 'base/_elements';
+@import 'components/_layout';
+@import 'components/_cell';

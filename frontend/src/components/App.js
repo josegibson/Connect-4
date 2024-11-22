@@ -46,7 +46,7 @@ function App() {
         onAgentChange={(e) => handleAgentChange(e, 1)}
       />
       <div className="board-container">
-        <h1 className="heading">Connect 4</h1>
+        <h1>Connect 4</h1>
         <Board />
         <button onClick={() => newGame()}>New Game</button>
       </div>

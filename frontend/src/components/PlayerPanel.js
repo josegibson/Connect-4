@@ -4,7 +4,7 @@ function PlayerPanel({ player, turn, status, onAgentChange, agent }) {
   return (
     <div className="player-panel">
       <div className={`display-tile player-${player} ${turn === player ? "active" : ""}`}></div>
-      <div className="agents-selector">
+      <div>
         <label htmlFor={`difficulty-${player}`}>Played by </label>
         <select
           id={`played-by-${player}`}
