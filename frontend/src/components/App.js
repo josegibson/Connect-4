@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UseConnect4 } from "./UseConnect4";
 import { useAgent } from "./useAgent";
-import PlayerPanel from "./PlayerPanel";
+import ConfigPanel from "./ConfigPanel";
 
 function App() {
   const { board, status, player, dropPiece, setUserTurn, newGame, Board } =
@@ -11,10 +11,24 @@ function App() {
     1: "human",
     2: "lookahead",
   });
+  const [config, setConfig] = useState({
+    size: "6x7",
+    inARow: 4,
+  });
 
   const handleAgentChange = (e, player) => {
     const value = e.target.value;
     setPlayerAgents((prev) => ({ ...prev, [player]: value }));
+  };
+
+  const handleBoardSizeChange = (size) => {
+    // Implement the logic to change the board size
+    setConfig((prev) => ({ ...prev, ["size"]: size }));
+  };
+
+  const handleInARowChange = (inARow) => {
+    // Implement the logic to change the in a row value
+    setConfig((prev) => ({ ...prev, ["inARow"]: inARow }));
   };
 
   useEffect(() => {
@@ -37,26 +51,22 @@ function App() {
   }, [status, player]);
 
   return (
-    <div className="app-container">
-      <PlayerPanel
-        player={1}
-        turn={player}
-        status={status}
-        agent={playerAgents[1]}
-        onAgentChange={(e) => handleAgentChange(e, 1)}
-      />
-      <div className="board-container">
-        <h1>Connect 4</h1>
-        <Board />
-        <button onClick={() => newGame()}>New Game</button>
+    <div>
+      <h1 style={{ margin: 0 }}>Connect 4</h1>
+      <div className="app-container">
+      <Board />
+        <ConfigPanel
+          players={[1, 2]}
+          turn={player}
+          status={status}
+          agents={playerAgents}
+          config={config}
+          onAgentChange={handleAgentChange}
+          newGame={newGame}
+          onBoardSizeChange={handleBoardSizeChange}
+          onInARowChange={handleInARowChange}
+        />
       </div>
-      <PlayerPanel
-        player={2}
-        turn={player}
-        status={status}
-        agent={playerAgents[2]}
-        onAgentChange={(e) => handleAgentChange(e, 2)}
-      />
     </div>
   );
 }

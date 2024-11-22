@@ -1,69 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
-@import 'variables';
-@import '../components/layout';
-@import '../components/cell';
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap");
+@import "variables";
+@import "../components/layout";
+@import "../components/cell";
 
 body {
-    font-family: 'Geist Mono', monospace;
-    font-size: 1.6rem;
-    color: $color-text;
-    line-height: 1.6;
-    background-color: $color-background;
-    text-align: center;
+  font-family: "Geist Mono", monospace;
+  font-size: 1.6rem;
+  color: $color-text;
+  line-height: 1.6;
+  background-color: $color-background;
+  text-align: center;
 }
 
 button {
-    margin: 5px;
-    font-family: inherit;
-    padding: 12px 24px;
-    border: none;
+
+  @media screen and (max-width: 480px) {
+    padding: 6px 12px;
+  }
+
+  width: 100%;
+  margin: 20px;
+  font-family: inherit;
+  padding: 8px 16px;
+  border: 2px solid $color-text;;
+  background-color: transparent;
+  color: $color-text;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 20px;
+
+  &.active{
     background-color: $color-text;
     color: $color-background;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.4s;
-    border-radius: 12px;
-    &:hover {
-        transform: scale(1.05);
-    }
-    &.outlined {
-        background-color: transparent;
-        color: $color-text;
-        // border: 2px solid $color-text;
-        &:hover {
-            background-color: $color-text;
-            color: $color-background;
-        }
-    }
+  }
+
+  &:hover {
+    background-color: $color-text;
+    color: $color-background;
+  }
 }
 
-select {
-    padding: 10px 20px;
-    border-style: none;
-    // border: 1px solid $color-text;
-    // border-radius: 8px;
-    background-color: $color-background;
-    color: $color-text;
-    font-size: 1.5em;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    font-size: 1.6rem;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-    box-shadow: none;
-    border-radius: 0;
-
-    &:focus {
-        outline: none;
-        border-color: $color-text;
-    }
-    // Custom arrow
-    &::after {
-        content: '▼';
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-    }
+label {
+  font-size: small;
+  margin: 0;
 }

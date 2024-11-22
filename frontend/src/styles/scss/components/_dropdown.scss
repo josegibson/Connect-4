@@ -1,0 +1,71 @@
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+  
+    @media screen and (max-width: 480px) {
+      padding: 4px 12px;
+      font-size: 16px;
+      margin: 5px;
+    }
+  
+    background-color: $color-secondary;
+    border-radius: 20px;
+    padding: 6px 18px;
+    margin: 20px;
+  
+    &.active {
+      box-shadow: 0px 0px 0px 2px $color-text;
+    }
+  
+    &.player-1 {
+      background-color: $color-player-1;
+    }
+  
+    &.player-2 {
+      background-color: $color-player-2;
+    }
+  
+    .dropdown-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .dropdown-value {
+      margin-left: auto;
+    }
+  
+    .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+      margin-left: 20px;
+  
+      &.open {
+        transform: rotate(180deg);
+      }
+    }
+  
+    .buttons-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-out;
+  
+      &.show {
+        max-height: 200px; // Adjust this value based on the content height
+      }
+
+      button {
+        margin: 5px;
+        border: 1px solid $color-text;
+      }
+
+    }
+  }

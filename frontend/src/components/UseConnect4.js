@@ -147,30 +147,42 @@ export const UseConnect4 = () => {
     if (userTurn === false) return;
     dropPiece(column);
     setUserTurn(false);
-  }
+  };
 
   const Board = () => (
-    <div>
-      {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="row">
-          {row.map((cell, cellIndex) => {
-            const isWinningCell = winningCells.some(
-              ([winRow, winCol]) => winRow === rowIndex && winCol === cellIndex
-            );
-            return (
-              <div
-                key={cellIndex}
-                className={`cell player-${cell} ${
-                  isWinningCell ? "winning" : ""
-                }`}
-                onClick={() => handleUserMove(cellIndex)}
-              />
-            );
-          })}
-        </div>
-      ))}
+    <div className="container">
+      <div>
+        {board.map((row, rowIndex) => (
+          <div key={rowIndex} className="row">
+            {row.map((cell, cellIndex) => {
+              const isWinningCell = winningCells.some(
+                ([winRow, winCol]) =>
+                  winRow === rowIndex && winCol === cellIndex
+              );
+              return (
+                <div
+                  key={cellIndex}
+                  className={`cell player-${cell} ${
+                    isWinningCell ? "winning" : ""
+                  }`}
+                  onClick={() => handleUserMove(cellIndex)}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
     </div>
   );
 
-  return { board, status, player, dropPiece, setUserTurn, newGame, updateStatus, Board };
+  return {
+    board,
+    status,
+    player,
+    dropPiece,
+    setUserTurn,
+    newGame,
+    updateStatus,
+    Board,
+  };
 };
