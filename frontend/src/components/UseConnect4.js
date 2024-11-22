@@ -1,8 +1,10 @@
 import { useState } from "react";
 
-export const UseConnect4 = () => {
+export const UseConnect4 = (config) => {
   const createEmptyBoard = () => {
-    return Array(6).fill(Array(7).fill(0));
+    const rows = parseInt(config.size.split("x")[0]);
+    const cols = parseInt(config.size.split("x")[1]);
+    return Array(rows).fill(Array(cols).fill(0));
   };
 
   const [board, setBoard] = useState(createEmptyBoard());
@@ -26,7 +28,7 @@ export const UseConnect4 = () => {
     if (status !== 0) return false;
 
     const newBoard = board.map((row) => row.slice());
-    for (let i = 5; i >= 0; i--) {
+    for (let i = newBoard.length - 1; i >= 0; i--) {
       if (newBoard[i][column] === 0) {
         newBoard[i][column] = player;
         // Check for a win or draw before updating the state
@@ -63,20 +65,13 @@ export const UseConnect4 = () => {
   };
 
   const checkHorizontal = (currentBoard, currentPlayer) => {
-    for (let i = 0; i < 6; i++) {
-      for (let j = 0; j < 4; j++) {
+    for (let i = 0; i < currentBoard.length; i++) {
+      for (let j = 0; j <= currentBoard[i].length - config.inARow; j++) {
         if (
           currentBoard[i][j] === currentPlayer &&
-          currentBoard[i][j + 1] === currentPlayer &&
-          currentBoard[i][j + 2] === currentPlayer &&
-          currentBoard[i][j + 3] === currentPlayer
+          currentBoard[i].slice(j, j + config.inARow).every(cell => cell === currentPlayer)
         ) {
-          return [
-            [i, j],
-            [i, j + 1],
-            [i, j + 2],
-            [i, j + 3],
-          ];
+          return Array.from({ length: config.inARow }, (_, k) => [i, j + k]);
         }
       }
     }
@@ -84,20 +79,13 @@ export const UseConnect4 = () => {
   };
 
   const checkVertical = (currentBoard, currentPlayer) => {
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 7; j++) {
+    for (let i = 0; i <= currentBoard.length - config.inARow; i++) {
+      for (let j = 0; j < currentBoard[i].length; j++) {
         if (
           currentBoard[i][j] === currentPlayer &&
-          currentBoard[i + 1][j] === currentPlayer &&
-          currentBoard[i + 2][j] === currentPlayer &&
-          currentBoard[i + 3][j] === currentPlayer
+          Array.from({ length: config.inARow }, (_, k) => currentBoard[i + k][j]).every(cell => cell === currentPlayer)
         ) {
-          return [
-            [i, j],
-            [i + 1, j],
-            [i + 2, j],
-            [i + 3, j],
-          ];
+          return Array.from({ length: config.inARow }, (_, k) => [i + k, j]);
         }
       }
     }
@@ -105,38 +93,24 @@ export const UseConnect4 = () => {
   };
 
   const checkDiagonal = (currentBoard, currentPlayer) => {
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 4; j++) {
+    for (let i = 0; i <= currentBoard.length - config.inARow; i++) {
+      for (let j = 0; j <= currentBoard[i].length - config.inARow; j++) {
         if (
           currentBoard[i][j] === currentPlayer &&
-          currentBoard[i + 1][j + 1] === currentPlayer &&
-          currentBoard[i + 2][j + 2] === currentPlayer &&
-          currentBoard[i + 3][j + 3] === currentPlayer
+          Array.from({ length: config.inARow }, (_, k) => currentBoard[i + k][j + k]).every(cell => cell === currentPlayer)
         ) {
-          return [
-            [i, j],
-            [i + 1, j + 1],
-            [i + 2, j + 2],
-            [i + 3, j + 3],
-          ];
+          return Array.from({ length: config.inARow }, (_, k) => [i + k, j + k]);
         }
       }
     }
 
-    for (let i = 3; i < 6; i++) {
-      for (let j = 0; j < 4; j++) {
+    for (let i = config.inARow - 1; i < currentBoard.length; i++) {
+      for (let j = 0; j <= currentBoard[i].length - config.inARow; j++) {
         if (
           currentBoard[i][j] === currentPlayer &&
-          currentBoard[i - 1][j + 1] === currentPlayer &&
-          currentBoard[i - 2][j + 2] === currentPlayer &&
-          currentBoard[i - 3][j + 3] === currentPlayer
+          Array.from({ length: config.inARow }, (_, k) => currentBoard[i - k][j + k]).every(cell => cell === currentPlayer)
         ) {
-          return [
-            [i, j],
-            [i - 1, j + 1],
-            [i - 2, j + 2],
-            [i - 3, j + 3],
-          ];
+          return Array.from({ length: config.inARow }, (_, k) => [i - k, j + k]);
         }
       }
     }

@@ -37,9 +37,9 @@ class RandomAgent:
 
 class LookaheadAgent:
 
-    def __init__(self, config, n=3):
+    def __init__(self, config, n=None):
         self.config = config
-        self.N_STEPS = n
+        self.N_STEPS = n if n is not None else config.inarow  # Use inarow as default depth
 
     # How deep to make the game tree: higher values take longer to run!
     def getMove(self, obs):
@@ -58,11 +58,11 @@ class LookaheadAgent:
 
     # Helper function for minimax: calculates value of heuristic for grid
     def get_heuristic(self, grid, mark):
-        num_threes = self.count_windows(grid, 3, mark)
-        num_fours = self.count_windows(grid, 4, mark)
-        num_threes_opp = self.count_windows(grid, 3, mark%2+1)
-        num_fours_opp = self.count_windows(grid, 4, mark%2+1)
-        score = num_threes - 1e2*num_threes_opp - 1e4*num_fours_opp + 1e6*num_fours
+        num_threes = self.count_windows(grid, self.config.inarow - 1, mark)
+        num_fours = self.count_windows(grid, self.config.inarow, mark)
+        num_threes_opp = self.count_windows(grid, self.config.inarow - 1, mark % 2 + 1)
+        num_fours_opp = self.count_windows(grid, self.config.inarow, mark % 2 + 1)
+        score = num_threes - 1e2 * num_threes_opp - 1e4 * num_fours_opp + 1e6 * num_fours
         return score
 
     # Uses minimax to calculate value of dropping piece in selected column

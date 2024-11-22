@@ -4,16 +4,16 @@ import { useAgent } from "./useAgent";
 import ConfigPanel from "./ConfigPanel";
 
 function App() {
-  const { board, status, player, dropPiece, setUserTurn, newGame, Board } =
-    UseConnect4();
-  const { makeAgentMove } = useAgent();
-  const [playerAgents, setPlayerAgents] = useState({
-    1: "human",
-    2: "lookahead",
-  });
   const [config, setConfig] = useState({
     size: "6x7",
     inARow: 4,
+  });
+  const { board, status, player, dropPiece, setUserTurn, newGame, Board } =
+    UseConnect4(config);
+  const { makeAgentMove, updateConfig } = useAgent();
+  const [playerAgents, setPlayerAgents] = useState({
+    1: "human",
+    2: "lookahead",
   });
 
   const handleAgentChange = (e, player) => {
@@ -30,6 +30,12 @@ function App() {
     // Implement the logic to change the in a row value
     setConfig((prev) => ({ ...prev, ["inARow"]: inARow }));
   };
+
+  useEffect(() => {
+    updateConfig(config);
+    newGame();
+    console.log(board);
+  }, [config]);
 
   useEffect(() => {
     console.log(playerAgents);
@@ -54,7 +60,7 @@ function App() {
     <div>
       <h1 style={{ margin: 0 }}>Connect 4</h1>
       <div className="app-container">
-      <Board />
+        <Board />
         <ConfigPanel
           players={[1, 2]}
           turn={player}
