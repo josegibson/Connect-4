@@ -14,10 +14,7 @@ CORS(app)
 port = int(os.getenv("PORT", 5000))
 
 config = Config(rows=6, cols=7, inarow=4)
-agent = {
-    "lookahead": Agent(agent_type="lookahead"),
-    "random": Agent(agent_type="random"),
-}
+agent = Agent(config=config)
 
 
 @app.route("/")
@@ -31,20 +28,25 @@ def move():
     app.logger.info(data)
     agent_name = data["agent"]
     obs = Observation(board=data["board"], mark=data["player"])
-    #log
-    app.logger.info(len(obs.board))
 
-    move = agent[agent_name].getMove(obs)
+    move = agent.agent[agent_name].getMove(obs)
     return jsonify({"move": move})
 
+@app.route("/api/config", methods=["GET"])
+def get_config():
+    print("get_config called!", config.__dict__)
+    return jsonify({"rows": config.rows, "cols": config.columns, "inarow": config.inarow})
+
 @app.route("/api/config", methods=["POST"])
-def config():
+def update_config():
     data = request.get_json()
-    config = Config(rows=data["rows"], cols=data["cols"], inarow=data["inarow"])
-    agent = {
-        "lookahead": Agent(agent_type="lookahead", config=config),
-        "random": Agent(agent_type="random", config=config),
-    }
+    global config
+    global agent
+    print("update_config called!", data)
+    new_config = Config(rows=data["rows"], cols=data["cols"], inarow=data["inarow"])
+    new_agent = Agent(config=config)
+    config = new_config
+    agent = new_agent
     return jsonify({"rows": data["rows"], "cols": data["cols"], "inarow": data["inarow"]})
 
 

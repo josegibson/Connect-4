@@ -13,17 +13,15 @@ class Observation:
         self.mark = mark
 
 class Agent:
-    def __init__(self, agent_type, config = Config(rows=6, cols=7, inarow=4)):
+    def __init__(self, config = Config(rows=6, cols=7, inarow=4)):
         self.config = config
-        if agent_type == 'random':
-            self.agent = RandomAgent(config)
-        elif agent_type == 'lookahead':
-            self.agent = LookaheadAgent(config)
-        else:
-            raise ValueError("Invalid agent type")
+        self.agent = {}
 
-    def getMove(self, obs):
-        return self.agent.getMove(obs)
+        self.agent['lookahead'] = LookaheadAgent(config, n=2)
+        self.agent['random'] = RandomAgent(config)
+
+    def getMove(self, obs, agent_type):
+        return self.agent[agent_type].getMove(obs)
     
 
 

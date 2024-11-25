@@ -2,8 +2,8 @@ import { useState } from "react";
 
 export const UseConnect4 = (config) => {
   const createEmptyBoard = () => {
-    const rows = parseInt(config.size.split("x")[0]);
-    const cols = parseInt(config.size.split("x")[1]);
+    const rows = config.rows;
+    const cols = config.cols;
     return Array(rows).fill(Array(cols).fill(0));
   };
 

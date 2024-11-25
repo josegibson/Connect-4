@@ -12,7 +12,6 @@ export function useAgent() {
     });
 
     const data = await response.json();
-    console.log(data);
     dropPiece(data.move);
   };
 
@@ -22,12 +21,22 @@ export function useAgent() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({cols: config.size.split("x")[1], rows: config.size.split("x")[0], inarow: config.inARow}),
+      body: JSON.stringify({columns: config.cols, rows: config.rows, inarow: config.inARow}),
     });
 
     const data = await response.json();
     console.log(data);
   };
 
-  return { makeAgentMove, updateConfig };
+  const getConfig = async () => {
+    const response = await fetch(`${API_URL}/api/config`, {
+      method: "GET",
+    });
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  };
+
+  return { makeAgentMove, updateConfig, getConfig };
 }

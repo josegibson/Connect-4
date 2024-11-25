@@ -4,17 +4,30 @@ import { useAgent } from "./useAgent";
 import ConfigPanel from "./ConfigPanel";
 
 function App() {
+  const { makeAgentMove, updateConfig, getConfig } = useAgent();
   const [config, setConfig] = useState({
-    size: "6x7",
+    cols: 7,
+    rows: 6,
     inARow: 4,
   });
-  const { board, status, player, dropPiece, setUserTurn, newGame, Board } =
-    UseConnect4(config);
-  const { makeAgentMove, updateConfig } = useAgent();
+
+  useEffect(() => {
+    const init_config = getConfig();
+    setConfig((prev) => ({
+      ...prev,
+      ["cols"]: init_config.columns,
+      ["rows"]: init_config.rows,
+      ["inARow"]: init_config.inarow,
+    }));
+  }, []);
+
   const [playerAgents, setPlayerAgents] = useState({
     1: "human",
     2: "lookahead",
   });
+
+  const { board, status, player, dropPiece, setUserTurn, newGame, Board } =
+    UseConnect4(config);
 
   const handleAgentChange = (e, player) => {
     const value = e.target.value;
@@ -23,7 +36,9 @@ function App() {
 
   const handleBoardSizeChange = (size) => {
     // Implement the logic to change the board size
-    setConfig((prev) => ({ ...prev, ["size"]: size }));
+    const cols = parseInt(size.split("x")[1], 10);
+    const rows = parseInt(size.split("x")[0], 10);
+    setConfig((prev) => ({ ...prev, ["rows"] : rows, ["cols"] : cols }));
   };
 
   const handleInARowChange = (inARow) => {
@@ -34,7 +49,6 @@ function App() {
   useEffect(() => {
     updateConfig(config);
     newGame();
-    console.log(board);
   }, [config]);
 
   useEffect(() => {
