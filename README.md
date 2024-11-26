@@ -40,5 +40,5 @@ A Connect 4 implementation with configurable board sizes and AI agents. Players 
 ## Known Limitations
 
 - AI response time varies due to Lambda cold starts
-- Mobile layout optimized for screens > 480px
+- Mobile layout optimized for screens < 768px
 - Limited error handling for network failures
