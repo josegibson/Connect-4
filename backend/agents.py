@@ -12,157 +12,119 @@ class Observation:
         self.board = board
         self.mark = mark
 
-class Agent:
-    def __init__(self, config = Config(rows=6, cols=7, inarow=4)):
-        self.config = config
-        self.agent = {}
+def get_random_move(obs, config):
+    return random.choice(list(range(config.columns)))
 
-        self.agent['lookahead'] = LookaheadAgent(config, n=2)
-        self.agent['random'] = RandomAgent(config)
-
-    def getMove(self, obs, agent_type):
-        return self.agent[agent_type].getMove(obs)
+def get_lookahead_move(obs, config, n=3):
+    grid = np.array(obs.board).reshape(config.rows, config.columns)
+    mark = obs.mark
     
-
-
-class RandomAgent:
-    def __init__(self, config):
-        self.config = config
-
-    def getMove(self, obs):
-        return random.choice(list(range(self.config.columns)))
-    
-
-class LookaheadAgent:
-
-    def __init__(self, config, n=None):
-        self.config = config
-        self.N_STEPS = n if n is not None else config.inarow  # Use inarow as default depth
-
-    # How deep to make the game tree: higher values take longer to run!
-    def getMove(self, obs):
-        # Get list of valid moves
-        grid = np.array(obs.board).reshape(self.config.rows, self.config.columns)
-        mark = obs.mark
-
-        valid_moves = [c for c in range(self.config.columns) if grid[0][c] == 0]
-
-        # Use the heuristic to assign a score to each possible board in the next step
-        scores = dict(zip(valid_moves, [self.score_move(grid, col, mark, self.N_STEPS) for col in valid_moves]))
-        # Get a list of columns (moves) that maximize the heuristic
-        max_cols = [key for key in scores.keys() if scores[key] == max(scores.values())]
-        # Select at random from the maximizing columns
-        return random.choice(max_cols)
-
-    # Helper function for minimax: calculates value of heuristic for grid
-    def get_heuristic(self, grid, mark):
-        num_threes = self.count_windows(grid, self.config.inarow - 1, mark)
-        num_fours = self.count_windows(grid, self.config.inarow, mark)
-        num_threes_opp = self.count_windows(grid, self.config.inarow - 1, mark % 2 + 1)
-        num_fours_opp = self.count_windows(grid, self.config.inarow, mark % 2 + 1)
-        score = num_threes - 1e2 * num_threes_opp - 1e4 * num_fours_opp + 1e6 * num_fours
-        return score
-
-    # Uses minimax to calculate value of dropping piece in selected column
-    def score_move(self, grid, col, mark, nsteps):
-        next_grid = self.drop_piece(grid, col, mark)
-        score = self.minimax(next_grid, nsteps-1, False, mark)
-        return score
-
-    # Helper function for minimax: checks if agent or opponent has four in a row in the window
-    def is_terminal_window(self, window):
-        return window.count(1) == self.config.inarow or window.count(2) == self.config.inarow
-
-    # Helper function for minimax: checks if game has ended
-    def is_terminal_node(self, grid):
-        # Check for draw 
-        if list(grid[0, :]).count(0) == 0:
-            return True
-        # Check for win: horizontal, vertical, or diagonal
-        # horizontal 
-        for row in range(self.config.rows):
-            for col in range(self.config.columns-(self.config.inarow-1)):
-                window = list(grid[row, col:col+self.config.inarow])
-                if self.is_terminal_window(window):
-                    return True
-        # vertical
-        for row in range(self.config.rows-(self.config.inarow-1)):
-            for col in range(self.config.columns):
-                window = list(grid[row:row+self.config.inarow, col])
-                if self.is_terminal_window(window):
-                    return True
-        # positive diagonal
-        for row in range(self.config.rows-(self.config.inarow-1)):
-            for col in range(self.config.columns-(self.config.inarow-1)):
-                window = list(grid[range(row, row+self.config.inarow), range(col, col+self.config.inarow)])
-                if self.is_terminal_window(window):
-                    return True
-        # negative diagonal
-        for row in range(self.config.inarow-1, self.config.rows):
-            for col in range(self.config.columns-(self.config.inarow-1)):
-                window = list(grid[range(row, row-self.config.inarow, -1), range(col, col+self.config.inarow)])
-                if self.is_terminal_window(window):
-                    return True
-        return False
-
-    # Minimax implementation
-    def minimax(self, node, depth, maximizingPlayer, mark):
-        is_terminal = self.is_terminal_node(node)
-        valid_moves = [c for c in range(self.config.columns) if node[0][c] == 0]
-        if depth == 0 or is_terminal:
-            return self.get_heuristic(node, mark)
-        if maximizingPlayer:
-            value = float('-inf')
-            for col in valid_moves:
-                child = self.drop_piece(node, col, mark)
-                value = max(value, self.minimax(child, depth-1, False, mark))
-            return value
-        else:
-            value = float('inf')
-            for col in valid_moves:
-                child = self.drop_piece(node, col, mark%2+1)
-                value = min(value, self.minimax(child, depth-1, True, mark))
-            return value
-        
-
-    # Helper function for score_move: gets board at next step if agent drops piece in selected column
-    def drop_piece(self, grid, col, mark):
+    def drop_piece(grid, col, mark):
         next_grid = grid.copy()
-        for row in range(self.config.rows-1, -1, -1):
+        for row in range(config.rows-1, -1, -1):
             if next_grid[row][col] == 0:
                 break
         next_grid[row][col] = mark
         return next_grid
     
-    # Helper function for get_heuristic: checks if window satisfies heuristic conditions
-    def check_window(self, window, num_discs, piece):
-        return (window.count(piece) == num_discs and window.count(0) == self.config.inarow-num_discs)
+    def check_window(window, num_discs, piece):
+        return (window.count(piece) == num_discs and window.count(0) == config.inarow-num_discs)
     
-    # Helper function for get_heuristic: counts number of windows satisfying specified heuristic conditions
-    def count_windows(self, grid, num_discs, piece):
+    def count_windows(grid, num_discs, piece):
         num_windows = 0
         # horizontal
-        for row in range(self.config.rows):
-            for col in range(self.config.columns-(self.config.inarow-1)):
-                window = list(grid[row, col:col+self.config.inarow])
-                if self.check_window(window, num_discs, piece):
+        for row in range(config.rows):
+            for col in range(config.columns-(config.inarow-1)):
+                window = list(grid[row, col:col+config.inarow])
+                if check_window(window, num_discs, piece):
                     num_windows += 1
         # vertical
-        for row in range(self.config.rows-(self.config.inarow-1)):
-            for col in range(self.config.columns):
-                window = list(grid[row:row+self.config.inarow, col])
-                if self.check_window(window, num_discs, piece):
+        for row in range(config.rows-(config.inarow-1)):
+            for col in range(config.columns):
+                window = list(grid[row:row+config.inarow, col])
+                if check_window(window, num_discs, piece):
                     num_windows += 1
         # positive diagonal
-        for row in range(self.config.rows-(self.config.inarow-1)):
-            for col in range(self.config.columns-(self.config.inarow-1)):
-                window = list(grid[range(row, row+self.config.inarow), range(col, col+self.config.inarow)])
-                if self.check_window(window, num_discs, piece):
+        for row in range(config.rows-(config.inarow-1)):
+            for col in range(config.columns-(config.inarow-1)):
+                window = list(grid[range(row, row+config.inarow), range(col, col+config.inarow)])
+                if check_window(window, num_discs, piece):
                     num_windows += 1
         # negative diagonal
-        for row in range(self.config.inarow-1, self.config.rows):
-            for col in range(self.config.columns-(self.config.inarow-1)):
-                window = list(grid[range(row, row-self.config.inarow, -1), range(col, col+self.config.inarow)])
-                if self.check_window(window, num_discs, piece):
+        for row in range(config.inarow-1, config.rows):
+            for col in range(config.columns-(config.inarow-1)):
+                window = list(grid[range(row, row-config.inarow, -1), range(col, col+config.inarow)])
+                if check_window(window, num_discs, piece):
                     num_windows += 1
         return num_windows
+    
+    def get_heuristic(grid, mark):
+        num_threes = count_windows(grid, 3, mark)
+        num_fours = count_windows(grid, 4, mark)
+        num_threes_opp = count_windows(grid, 3, mark%2+1)
+        num_fours_opp = count_windows(grid, 4, mark%2+1)
+        score = num_threes - 1e2*num_threes_opp - 1e4*num_fours_opp + 1e6*num_fours
+        return score
+    
+    def is_terminal_window(window):
+        return window.count(1) == config.inarow or window.count(2) == config.inarow
+    
+    def is_terminal_node(grid):
+        # Check for draw 
+        if list(grid[0, :]).count(0) == 0:
+            return True
+        # Check for win: horizontal, vertical, or diagonal
+        # horizontal 
+        for row in range(config.rows):
+            for col in range(config.columns-(config.inarow-1)):
+                window = list(grid[row, col:col+config.inarow])
+                if is_terminal_window(window):
+                    return True
+        # vertical
+        for row in range(config.rows-(config.inarow-1)):
+            for col in range(config.columns):
+                window = list(grid[row:row+config.inarow, col])
+                if is_terminal_window(window):
+                    return True
+        # positive diagonal
+        for row in range(config.rows-(config.inarow-1)):
+            for col in range(config.columns-(config.inarow-1)):
+                window = list(grid[range(row, row+config.inarow), range(col, col+config.inarow)])
+                if is_terminal_window(window):
+                    return True
+        # negative diagonal
+        for row in range(config.inarow-1, config.rows):
+            for col in range(config.columns-(config.inarow-1)):
+                window = list(grid[range(row, row-config.inarow, -1), range(col, col+config.inarow)])
+                if is_terminal_window(window):
+                    return True
+        return False
+    
+    def minimax(node, depth, maximizingPlayer, mark):
+        is_terminal = is_terminal_node(node)
+        valid_moves = [c for c in range(config.columns) if node[0][c] == 0]
+        if depth == 0 or is_terminal:
+            return get_heuristic(node, mark)
+        if maximizingPlayer:
+            value = float('-inf')
+            for col in valid_moves:
+                child = drop_piece(node, col, mark)
+                value = max(value, minimax(child, depth-1, False, mark))
+            return value
+        else:
+            value = float('inf')
+            for col in valid_moves:
+                child = drop_piece(node, col, mark%2+1)
+                value = min(value, minimax(child, depth-1, True, mark))
+            return value
+    
+    def score_move(grid, col, mark, nsteps):
+        next_grid = drop_piece(grid, col, mark)
+        score = minimax(next_grid, nsteps-1, False, mark)
+        return score
+    
+    # Main logic
+    valid_moves = [c for c in range(config.columns) if grid[0][c] == 0]
+    scores = dict(zip(valid_moves, [score_move(grid, col, mark, n) for col in valid_moves]))
+    max_cols = [key for key in scores.keys() if scores[key] == max(scores.values())]
+    return random.choice(max_cols)

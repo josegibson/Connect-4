@@ -12,6 +12,8 @@ function ConfigPanel({
   onBoardSizeChange,
   onInARowChange,
 }) {
+  const selectedSize = `${config.rows}x${config.cols}`;
+
   return (
     <div className="container">
       <h4
@@ -31,9 +33,8 @@ function ConfigPanel({
         options={[
           { label: "6x7", value: "6x7" },
           { label: "7x8", value: "7x8" },
-          { label: "8x9", value: "8x9" },
         ]}
-        selectedOption={config.size}
+        selectedOption={selectedSize}
         onOptionChange={(value) => onBoardSizeChange(value)}
       />
       <Dropdown

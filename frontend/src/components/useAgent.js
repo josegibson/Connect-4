@@ -1,42 +1,28 @@
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export function useAgent() {
-  const makeAgentMove = async (board, player, dropPiece, agent) => {
+  const makeAgentMove = async (agent, config, board, player, dropPiece) => {
 
-    const response = await fetch(`${API_URL}/api/move`, {
+    const payload = {
+      agent,
+      config,
+      board,
+      player,
+    };
+
+    const url = `${API_URL}/move`;
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
-      "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ board: board, player: player, agent: agent }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
     dropPiece(data.move);
   };
 
-  const updateConfig = async (config) => {
-    const response = await fetch(`${API_URL}/api/config`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({columns: config.cols, rows: config.rows, inarow: config.inARow}),
-    });
-
-    const data = await response.json();
-    console.log(data);
-  };
-
-  const getConfig = async () => {
-    const response = await fetch(`${API_URL}/api/config`, {
-      method: "GET",
-    });
-
-    const data = await response.json();
-    console.log(data);
-    return data;
-  };
-
-  return { makeAgentMove, updateConfig, getConfig };
+  return { makeAgentMove };
 }

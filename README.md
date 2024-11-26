@@ -1,21 +1,44 @@
 # Connect 4 Game
 
-## Play the Game
+## Overview
 
-Access the game [here](https://josegibson.github.io/Connect-4/).
+A Connect 4 implementation with configurable board sizes and AI agents. Players can play against each other or against different AI strategies.
+
+## Play Online
+
+[Play Connect 4](https://josegibson.github.io/Connect-4/)
 
 ## Features
 
-- Classic Connect 4 game for two players and agents
-- Interactive 6x7 grid board
-- Win detection for horizontal, vertical, and diagonal connections
-- Game reset after win or draw
-- Responsive design
+- Configurable board dimensions (default 6x7)
+- Adjustable win condition (how many pieces in a row)
+- Player options:
+  - Human vs Human
+  - Human vs AI
+  - AI vs AI
+- Available Algorithms:
+  - Random
+  - Lookahead
 
-## Technologies
+## Technical Stack
 
-- **Frontend:** React
-- **Backend:** Flask (Containerized with Docker)
-- **Hosting:** 
-  - Frontend on GitHub Pages
-  - Backend on Heroku (deployed via Git)
+### Frontend
+- React 18
+- SCSS for styling
+- Responsive design using CSS Grid
+- Bootstrap 5.3
+
+### Backend
+- AWS Lambda functions
+- Kaggle Environments integration for AI agents while testing
+
+### Development Tools
+- Node.js
+- Docker for local development
+- SASS for CSS preprocessing
+
+## Known Limitations
+
+- AI response time varies due to Lambda cold starts
+- Mobile layout optimized for screens > 480px
+- Limited error handling for network failures
