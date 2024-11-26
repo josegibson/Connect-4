@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from agents import Config, Observation, get_random_move, get_lookahead_move
+from agents import Config, Observation, get_move
 
 load_dotenv()
 
@@ -30,13 +30,8 @@ def move():
                        inarow=data["config"]["inARow"])
         obs = Observation(board=data["board"], mark=data["player"])
         
-        if agent_name == "random":
-            move = get_random_move(obs, config)
-        elif agent_name == "lookahead":
-            move = get_lookahead_move(obs, config)
-        else:
-            return jsonify({"error": "Invalid agent type"}), 400
-
+        move = get_move(agent_name, obs, config)
+        
         return jsonify({"move": move})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
