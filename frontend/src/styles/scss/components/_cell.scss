@@ -1,6 +1,4 @@
-
 .cell{
-
 
     width: 4vw;
     height: 4vw;
@@ -20,21 +18,31 @@
     transition: background-color 0.3s, transform 0.3s;
     &:hover {
         background-color: lighten($color-accent-dark, 10%);
-        // transform: scale(1.1);
     }
 
     &.player-1 {
         $bg-color: $color-player-1;
         background-color: $bg-color;
-        &.winning {
-            box-shadow: 0 0 0 2px lighten($bg-color, 40%);
-        }
     }
     &.player-2 {
         $bg-color: $color-player-2;
         background-color: $bg-color;
-        &.winning {
-            box-shadow: 0 0 0 2px lighten($bg-color, 40%);
-        }
+    }
+
+    &.display-tile {
+        width: 5vh;
+        height: 5vh;
+        margin: 20px 0px;
+        vertical-align: middle;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    &.winning {
+        animation: pulse 0.6s infinite ease-in-out;
     }
 }

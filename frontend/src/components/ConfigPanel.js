@@ -23,7 +23,7 @@ function ConfigPanel({
         style={{ margin: 0 }}
       >
         {status === 1 || status === 2
-          ? `Player ${status} won!!`
+          ? <><span className={`cell player-${status} display-tile winning`}></span> Won!!</>
           : status === 3
           ? "It's a draw"
           : ""}
@@ -62,7 +62,12 @@ function ConfigPanel({
           }
         />
       ))}      
-      <button onClick={() => newGame()}>New Game</button>
+      <button 
+        className={`${status === 1 || status === 2 || status === 3 ? 'pulsate' : ''}`} 
+        onClick={() => newGame()}
+      >
+        New Game
+      </button>
     </div>
   );
 }
