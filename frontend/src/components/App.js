@@ -4,22 +4,12 @@ import { useAgent } from "./useAgent";
 import ConfigPanel from "./ConfigPanel";
 
 function App() {
-  const { makeAgentMove, updateConfig, getConfig } = useAgent();
+  const { makeAgentMove } = useAgent();
   const [config, setConfig] = useState({
     cols: 7,
     rows: 6,
     inARow: 4,
   });
-
-  useEffect(() => {
-    const init_config = getConfig();
-    setConfig((prev) => ({
-      ...prev,
-      ["cols"]: init_config.columns,
-      ["rows"]: init_config.rows,
-      ["inARow"]: init_config.inarow,
-    }));
-  }, []);
 
   const [playerAgents, setPlayerAgents] = useState({
     1: "human",
@@ -35,29 +25,25 @@ function App() {
   };
 
   const handleBoardSizeChange = (size) => {
-    // Implement the logic to change the board size
     const cols = parseInt(size.split("x")[1], 10);
     const rows = parseInt(size.split("x")[0], 10);
-    setConfig((prev) => ({ ...prev, ["rows"] : rows, ["cols"] : cols }));
+    setConfig((prev) => ({ ...prev, rows, cols }));
   };
 
   const handleInARowChange = (inARow) => {
-    // Implement the logic to change the in a row value
-    setConfig((prev) => ({ ...prev, ["inARow"]: inARow }));
+    setConfig((prev) => ({ ...prev, inARow: parseInt(inARow, 10) }));
   };
 
   useEffect(() => {
-    updateConfig(config);
     newGame();
   }, [config]);
 
   useEffect(() => {
-    console.log(playerAgents);
     if (status === 0 && player === 2) {
       if (playerAgents[2] === "human") {
         setUserTurn(true);
       } else {
-        makeAgentMove(board, player, dropPiece, playerAgents[2]);
+        makeAgentMove(playerAgents[2], config, board, player , dropPiece);
       }
     }
 
@@ -65,7 +51,7 @@ function App() {
       if (playerAgents[1] === "human") {
         setUserTurn(true);
       } else {
-        makeAgentMove(board, player, dropPiece, playerAgents[1]);
+        makeAgentMove(playerAgents[1], config, board, player, dropPiece);
       }
     }
   }, [status, player]);
